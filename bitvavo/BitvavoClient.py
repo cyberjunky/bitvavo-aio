@@ -88,9 +88,7 @@ class BitvavoClient:
     def _preprocess_rest_response(status_code: int, body: Optional[dict]) -> None:
         """ Trigger exception if needed """
         if str(status_code)[0] != "2":
-            raise BitvavoException(
-                f"BitvavoException: status [{status_code}], response [{body}]"
-            )
+            raise BitvavoException(status_code, body)
 
     async def _create_get(
         self,
@@ -207,7 +205,6 @@ class BitvavoClient:
             )
             async with rest_call as response:
                 status_code = response.status
-                headers = response.headers
                 body = await response.text()
 
                 LOG.debug(f"<: status [{status_code}], response [{body}]")
@@ -220,11 +217,7 @@ class BitvavoClient:
 
                 self._preprocess_rest_response(status_code, body)
 
-                return {
-                    "status_code": status_code,
-                    "headers": headers,
-                    "response": body,
-                }
+                return body
 
     def _get_rest_session(self) -> aiohttp.ClientSession:
         """ Get rest session """
