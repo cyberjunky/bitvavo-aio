@@ -1,4 +1,4 @@
-# bitvavo-aio 1.0.0
+# bitvavo-aio 1.0.1
 
 
 This Python library provides access to [Bitvavo crypto exchange](https://bitvavo.com/en) API. The library is focussed on Bitvavo's REST API only for the moment, as lean and mean as possible, websocket support may follow later.
