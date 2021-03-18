@@ -24,6 +24,7 @@ Write down the Bitvavo API and SECRET key given to be used in the code.
 
 ### Basic Example
 ```python
+#!/usr/bin/env python3
 import asyncio
 import logging
 import os
