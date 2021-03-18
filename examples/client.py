@@ -3,10 +3,10 @@ import logging
 import os
 from datetime import datetime
 
-from bitvavo.BitvavoClient import BitvavoClient
-from bitvavo.Pair import Pair
 from bitvavo import enums
+from bitvavo.BitvavoClient import BitvavoClient
 from bitvavo.BitvavoExceptions import BitvavoException
+from bitvavo.Pair import Pair
 
 LOG = logging.getLogger("bitvavo")
 LOG.setLevel(logging.DEBUG)
@@ -19,8 +19,8 @@ async def run():
 
     # Retrieve your API and SECRET key from the Bitvavo website, create the keys and store them in APIKEY/SECKEY
     # environment variables
-    api_key = os.environ['APIKEY']
-    sec_key = os.environ['SECKEY']
+    api_key = os.environ["APIKEY"]
+    sec_key = os.environ["SECKEY"]
 
     client = BitvavoClient(api_key, sec_key)
 

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
 	name="bitvavo-aio",
-	version="1.0.1",
+	version="1.0.2",
 	author="@cyberjunky",
 	author_email="ron@cyberjunky.nl",
 	description="Bitvavo asynchronous Python client",

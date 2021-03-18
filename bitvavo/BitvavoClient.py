@@ -1,29 +1,25 @@
-""" Bitvavo REST API Client code """
-import hmac
-import hashlib
-import logging
+"""Bitvavo REST API Client code."""
 import datetime
+import hashlib
+import hmac
 import json
+import logging
 import ssl
 from typing import Optional
+
 import aiohttp
 
-from bitvavo.Pair import Pair
-from bitvavo.enums import (
-    RestCallType,
-    OrderType,
-    OrderSide,
-    TimeInForce,
-    SelfTradePrevention,
-)
-from bitvavo.Timer import Timer
 from bitvavo.BitvavoExceptions import BitvavoException
+from bitvavo.enums import (OrderSide, OrderType, RestCallType,
+                           SelfTradePrevention, TimeInForce)
+from bitvavo.Pair import Pair
+from bitvavo.Timer import Timer
 
 LOG = logging.getLogger(__name__)
 
 
 class BitvavoClient:
-    """ Client Object """
+    """Client Object."""
 
     REST_API_URI = "https://api.bitvavo.com/v2/"
     VALIDITY_WINDOW_MS = 5000
@@ -31,7 +27,7 @@ class BitvavoClient:
     def __init__(
         self, api_key: str = None, sec_key: str = None, api_trace_log: bool = False
     ) -> None:
-        """ Initialize """
+        """Initialize."""
 
         self.api_key = api_key
         self.sec_key = sec_key
@@ -42,7 +38,7 @@ class BitvavoClient:
         self.api_trace_log = api_trace_log
 
     def _get_rest_api_uri(self) -> str:
-        """ Return api url """
+        """Return api url."""
         return self.REST_API_URI
 
     def _sign_payload(
@@ -53,7 +49,7 @@ class BitvavoClient:
         params: dict = None,
         headers: dict = None,
     ) -> None:
-        """ Create signature payload """
+        """Create signature payload."""
         timestamp = self._get_current_timestamp_ms()
 
         resource_string = resource
@@ -86,7 +82,7 @@ class BitvavoClient:
 
     @staticmethod
     def _preprocess_rest_response(status_code: int, body: Optional[dict]) -> None:
-        """ Trigger exception if needed """
+        """Trigger exception if needed."""
         if str(status_code)[0] != "2":
             raise BitvavoException(status_code, body)
 
@@ -97,7 +93,7 @@ class BitvavoClient:
         headers: dict = None,
         signed: bool = False,
     ) -> dict:
-        """ Create get request """
+        """Create get request."""
         return await self._create_rest_call(
             RestCallType.GET, resource, None, params, headers, signed
         )
@@ -110,7 +106,7 @@ class BitvavoClient:
         headers: dict = None,
         signed: bool = False,
     ) -> dict:
-        """ Create post request """
+        """Create post request."""
         return await self._create_rest_call(
             RestCallType.POST, resource, data, params, headers, signed
         )
@@ -122,7 +118,7 @@ class BitvavoClient:
         headers: dict = None,
         signed: bool = False,
     ) -> dict:
-        """ Create delete request """
+        """Create delete request."""
         return await self._create_rest_call(
             RestCallType.DELETE, resource, None, params, headers, signed
         )
@@ -134,7 +130,7 @@ class BitvavoClient:
         headers: dict = None,
         signed: bool = False,
     ) -> dict:
-        """ Create put request """
+        """Create put request."""
         return await self._create_rest_call(
             RestCallType.PUT, resource, None, params, headers, signed
         )
@@ -149,7 +145,7 @@ class BitvavoClient:
         signed: bool = False,
         api_variable_path: str = None,
     ) -> dict:
-        """ Create rest call """
+        """Create rest call."""
         with Timer("RestCall"):
             # ensure headers is always a valid object
             if headers is None:
@@ -220,7 +216,7 @@ class BitvavoClient:
                 return body
 
     def _get_rest_session(self) -> aiohttp.ClientSession:
-        """ Get rest session """
+        """Get rest session."""
         if self.rest_session is not None:
             return self.rest_session
 
@@ -238,7 +234,7 @@ class BitvavoClient:
 
     @staticmethod
     def _clean_request_params(params: dict) -> dict:
-        """ Create clean parameters """
+        """Create clean parameters."""
         clean_params = {}
         for key, value in params.items():
             if value is not None:
@@ -247,22 +243,22 @@ class BitvavoClient:
         return clean_params
 
     async def _on_request_start(self, trace_config_ctx, params) -> None:
-        """ Log request start """
+        """Log request start."""
         LOG.debug(f"> Context: {trace_config_ctx}")
         LOG.debug(f"> Params: {params}")
 
     async def _on_request_end(self, trace_config_ctx, params) -> None:
-        """ Log request end """
+        """Log request end."""
         LOG.debug(f"< Context: {trace_config_ctx}")
         LOG.debug(f"< Params: {params}")
 
     @staticmethod
     def _get_current_timestamp_ms() -> int:
-        """ Return timestamp """
+        """Return timestamp."""
         return int(datetime.datetime.now(tz=datetime.timezone.utc).timestamp() * 1000)
 
     def _get_signature(self, params: dict, data: dict) -> str:
-        """ Return signature """
+        """Return signature."""
         params_string = ""
         data_string = ""
 
@@ -283,21 +279,21 @@ class BitvavoClient:
 
     @staticmethod
     def _map_pair(pair: Pair) -> str:
-        """ Return pair string """
+        """Return pair string."""
         return f"{pair.base}-{pair.quote}"
 
     async def close(self) -> None:
-        """ Close session """
+        """Close session."""
         session = self._get_rest_session()
         if session is not None:
             await session.close()
 
     async def get_time(self) -> dict:
-        """ Get time API call """
+        """Get time API call."""
         return await self._create_get("time")
 
     async def get_markets(self, pair: Pair = None) -> dict:
-        """ Get markets API call """
+        """Get markets API call."""
         params = self._clean_request_params({})
 
         if pair:
@@ -306,13 +302,13 @@ class BitvavoClient:
         return await self._create_get("markets", params=params)
 
     async def get_assets(self, symbol: str = None) -> dict:
-        """ Get assets API call """
+        """Get assets API call."""
         params = self._clean_request_params({"symbol": symbol})
 
         return await self._create_get("assets", params=params)
 
     async def get_orderbook(self, pair: Optional[Pair], limit: int = None) -> dict:
-        """ Get orderbook API call """
+        """Get orderbook API call."""
         params = self._clean_request_params({})
 
         if limit:
@@ -321,7 +317,7 @@ class BitvavoClient:
         return await self._create_get(f"{self._map_pair(pair)}/book", params=params)
 
     async def get_trades(self, pair: Pair, limit: int = None) -> dict:
-        """ Get trades API call """
+        """Get trades API call."""
         params = self._clean_request_params({})
 
         if limit:
@@ -330,7 +326,7 @@ class BitvavoClient:
         return await self._create_get(f"{self._map_pair(pair)}/trades", params=params)
 
     async def get_price_ticker(self, pair: Optional[Pair] = None) -> dict:
-        """ Get price ticker API call """
+        """Get price ticker API call."""
         params = self._clean_request_params({})
 
         if pair:
@@ -339,7 +335,7 @@ class BitvavoClient:
         return await self._create_get("ticker/price", params=params)
 
     async def get_best_orderbook_ticker(self, pair: Optional[Pair] = None) -> dict:
-        """ Get orderbook API call """
+        """Get orderbook API call."""
         params = self._clean_request_params({})
 
         if pair:
@@ -348,7 +344,7 @@ class BitvavoClient:
         return await self._create_get("ticker/book", params=params)
 
     async def get_24h_price_ticker(self, pair: Optional[Pair] = None) -> dict:
-        """ Get 24h ticker API call """
+        """Get 24h ticker API call."""
         params = self._clean_request_params({})
 
         if pair:
@@ -357,7 +353,7 @@ class BitvavoClient:
         return await self._create_get("ticker/24h", params=params)
 
     async def get_open_orders(self, pair: Optional[Pair] = None) -> dict:
-        """ Get open orders API call """
+        """Get open orders API call."""
         params = self._clean_request_params({})
 
         if pair:
@@ -366,13 +362,13 @@ class BitvavoClient:
         return await self._create_get("ordersOpen", params=params, signed=True)
 
     async def get_orders(self, pair: Pair = None) -> dict:
-        """ Get orders API call """
+        """Get orders API call."""
         params = self._clean_request_params({"market": self._map_pair(pair)})
 
         return await self._create_get("orders", params=params, signed=True)
 
     async def get_historical_trades(self, pair: Pair = None, limit: int = None) -> dict:
-        """ Get trades history API call """
+        """Get trades history API call."""
         params = self._clean_request_params({"market": self._map_pair(pair)})
 
         if limit:
@@ -381,23 +377,23 @@ class BitvavoClient:
         return await self._create_get("trades", params=params, signed=True)
 
     async def get_account(self) -> dict:
-        """ Get account API call """
+        """Get account API call."""
         return await self._create_get("account", signed=True)
 
     async def get_balance(self, symbol: str = None) -> dict:
-        """ Get balance API call """
+        """Get balance API call."""
         params = self._clean_request_params({"symbol": symbol})
 
         return await self._create_get("balance", params=params, signed=True)
 
     async def get_deposit(self, symbol: str = None) -> dict:
-        """ Get deposito API call """
+        """Get deposito API call."""
         params = self._clean_request_params({"symbol": symbol})
 
         return await self._create_get("deposit", params=params, signed=True)
 
     async def get_deposit_history(self, symbol: str = None, limit: int = None) -> dict:
-        """ Get deposito history API call """
+        """Get deposito history API call."""
         params = self._clean_request_params({"symbol": symbol})
 
         if limit:
@@ -408,7 +404,7 @@ class BitvavoClient:
     async def get_withdrawal_history(
         self, symbol: str = None, limit: int = None
     ) -> dict:
-        """ Get withdrawal history API call """
+        """Get withdrawal history API call."""
         params = self._clean_request_params({"symbol": symbol})
 
         if limit:
@@ -430,7 +426,7 @@ class BitvavoClient:
         disable_market_protection: bool = None,
         full_response: bool = None,
     ) -> dict:
-        """ Get create order API call """
+        """Get create order API call."""
         data = self._clean_request_params(
             {
                 "market": self._map_pair(pair),
@@ -454,7 +450,7 @@ class BitvavoClient:
         return await self._create_post("order", data=data, signed=True)
 
     async def cancel_order(self, pair: Pair, order_id: str) -> dict:
-        """ Get cancel order API call """
+        """Get cancel order API call."""
         params = self._clean_request_params(
             {"market": self._map_pair(pair), "orderId": order_id}
         )
@@ -462,13 +458,13 @@ class BitvavoClient:
         return await self._create_delete("order", params=params, signed=True)
 
     async def cancel_orders(self, pair: Pair) -> dict:
-        """ Get cancel orders API call """
+        """Get cancel orders API call."""
         params = self._clean_request_params({"market": self._map_pair(pair)})
 
         return await self._create_delete("orders", params=params, signed=True)
 
     async def get_order(self, pair: Pair, order_id: str) -> dict:
-        """ Get get order API call """
+        """Get get order API call."""
         params = self._clean_request_params(
             {"market": self._map_pair(pair), "orderId": order_id}
         )
@@ -478,7 +474,7 @@ class BitvavoClient:
     async def get_candelsticks(
         self, pair: Pair, interval: str = "1m", limit: int = None
     ) -> dict:
-        """ Get candelsticks API call """
+        """Get candelsticks API call."""
         params = self._clean_request_params({"interval": interval})
 
         if limit:

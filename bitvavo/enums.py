@@ -1,10 +1,11 @@
-""" Enumerations """
+"""Enumerations."""
 
 import enum
 
 
 class RestCallType(enum.Enum):
-    """ REST CallTypes """
+    """REST CallTypes."""
+
     GET = "GET"
     POST = "POST"
     DELETE = "DELETE"
@@ -12,13 +13,15 @@ class RestCallType(enum.Enum):
 
 
 class OrderSide(enum.Enum):
-    """ Order Side """
+    """Order Side."""
+
     BUY = "BUY"
     SELL = "SELL"
 
 
 class OrderType(enum.Enum):
-    """ Order Types """
+    """Order Types."""
+
     LIMIT = "LIMIT"
     MARKET = "MARKET"
     STOP_LOSS = "STOP_LOSS"
@@ -29,7 +32,8 @@ class OrderType(enum.Enum):
 
 
 class CandelstickInterval(enum.Enum):
-    """ CandelStick Intervals """
+    """CandelStick Intervals."""
+
     I_1MIN = "1m"
     I_3MIN = "3m"
     I_5MIN = "5m"
@@ -48,21 +52,24 @@ class CandelstickInterval(enum.Enum):
 
 
 class OrderResponseType(enum.Enum):
-    """ Order Response Type """
+    """Order Response Type."""
+
     ACT = "ACK"
     RESULT = "RESULT"
     FULL = "FULL"
 
 
 class TimeInForce(enum.Enum):
-    """ Time Settings """
+    """Time Settings."""
+
     GOOD_TILL_CANCELLED = "GTC"
     IMMEDIATE_OR_CANCELLED = "IOC"
     FILL_OR_KILL = "FOK"
 
 
 class SelfTradePrevention(enum.Enum):
-    """ Trade Preventions """
+    """Trade Preventions."""
+
     DECREMENT_AND_CANCEL = "decrementAndCancel"
     CANCEL_OLDEST = "cancelOldest"
     CANCEL_NEWEST = "cancelNewest"

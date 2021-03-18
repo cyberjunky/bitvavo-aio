@@ -1,4 +1,4 @@
-""" Timer related code """
+"""Timer related code."""
 
 import time
 import logging
@@ -6,8 +6,9 @@ import logging
 LOG = logging.getLogger(__name__)
 
 
-class Timer():
-    """ Timer """
+class Timer:
+    """Timer object."""
+
     def __init__(self, name, active=True):
         self.name = name
         self.active = active
