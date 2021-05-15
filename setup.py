@@ -28,7 +28,7 @@ setuptools.setup(
 		"Typing :: Typed",
 	],
 	install_requires=[
-		'aiohttp==3.7.4',
+		'aiohttp>=3.7.4,<4',
 	],
 	python_requires='>=3.6',
 )
