@@ -9,6 +9,7 @@ setuptools.setup(
 	author="@cyberjunky",
 	author_email="ron@cyberjunky.nl",
 	description="Bitvavo asynchronous Python client",
+	license="MIT",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
 	url="https://github.com/cyberjunky/bitvavo-aio",
