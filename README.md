@@ -3,7 +3,7 @@
 
 This Python library provides access to [Bitvavo crypto exchange](https://bitvavo.com/en) API. The library is focussed on Bitvavo's REST API only for the moment, as lean and mean as possible, websocket support may follow later.
 
-`binance-aio` is designed as an asynchronous library utilizing modern features of Python using [aiohttp](https://aiohttp.readthedocs.io/en/stable/).
+`bitvavo-aio` is designed as an asynchronous library utilizing modern features of Python using [aiohttp](https://aiohttp.readthedocs.io/en/stable/).
 
 For changes see: [CHANGELOG](https://github.com/cyberjunky/bitvavo-aio/blob/master/CHANGELOG.md).
 
