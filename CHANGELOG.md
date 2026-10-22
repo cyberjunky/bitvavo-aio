@@ -40,6 +40,11 @@ Fixed:
 - Query strings are now signed exactly as sent
 - API keys are no longer written to the debug log
 - Default access window raised to 10s (Bitvavo default) to tolerate clock skew
+- Stop loss / take profit order types are sent as `stopLoss`, `stopLossLimit`, etc.
+- `get_candlesticks` accepts `CandelstickInterval` values; `I_1W` is now `1W`
+
+Removed (never supported by Bitvavo):
+- `OrderType.LIMIT_MAKER`, `CandelstickInterval.I_3MIN` / `I_3D`, `OrderResponseType` (use `full_response`)
 
 Changed:
 - Packaging moved to `pyproject.toml`; requires Python 3.11+ and aiohttp 3.9+

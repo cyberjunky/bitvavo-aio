@@ -22,7 +22,7 @@ from bitvavo.BitvavoExceptions import (
     BitvavoException,
     BitvavoRateLimitError,
 )
-from bitvavo.enums import OrderSide, OrderType, TimeInForce
+from bitvavo.enums import CandelstickInterval, OrderSide, OrderType, TimeInForce
 from bitvavo.Pair import Pair
 
 
@@ -230,3 +230,10 @@ def test_pair_helpers() -> None:
     assert Pair.from_market("BTC-EUR") == Pair("BTC", "EUR")
     assert BitvavoClient._map_pair(Pair("BTC", "EUR")) == "BTC-EUR"
     assert BitvavoClient._map_pair(None) is None
+
+
+async def test_candlestick_interval_enum(api: FakeApi, make_client) -> None:
+    api.add("BTC-EUR/candles", [])
+    async with make_client() as client:
+        await client.get_candlesticks("BTC-EUR", CandelstickInterval.I_1W)
+    assert api.requests[0].path_qs == "/v2/BTC-EUR/candles?interval=1W"

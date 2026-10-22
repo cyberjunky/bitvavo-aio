@@ -17,7 +17,14 @@ from bitvavo.BitvavoExceptions import (
     BitvavoException,
     exception_for_response,
 )
-from bitvavo.enums import OrderSide, OrderType, RestCallType, SelfTradePrevention, TimeInForce
+from bitvavo.enums import (
+    CandelstickInterval,
+    OrderSide,
+    OrderType,
+    RestCallType,
+    SelfTradePrevention,
+    TimeInForce,
+)
 from bitvavo.Pair import Pair
 from bitvavo.Timer import Timer
 
@@ -357,12 +364,14 @@ class BitvavoClient:
     async def get_candlesticks(
         self,
         pair: Pair | str,
-        interval: str = "1m",
+        interval: CandelstickInterval | str = "1m",
         limit: int | None = None,
         start: int | None = None,
         end: int | None = None,
     ) -> Any:
         """Get candlesticks API call."""
+        if isinstance(interval, CandelstickInterval):
+            interval = interval.value
         params = self._clean_request_params(
             {"interval": interval, "limit": limit, "start": start, "end": end}
         )
@@ -370,7 +379,7 @@ class BitvavoClient:
         return await self._create_get(f"{self._map_pair(pair)}/candles", params=params)
 
     async def get_candelsticks(
-        self, pair: Pair | str, interval: str = "1m", limit: int | None = None
+        self, pair: Pair | str, interval: CandelstickInterval | str = "1m", limit: int | None = None
     ) -> Any:
         """Get candlesticks API call (kept for backwards compatibility)."""
         return await self.get_candlesticks(pair, interval, limit)

@@ -28,14 +28,12 @@ class OrderType(enum.Enum):
     STOP_LOSS_LIMIT = "STOP_LOSS_LIMIT"
     TAKE_PROFIT = "TAKE_PROFIT"
     TAKE_PROFIT_LIMIT = "TAKE_PROFIT_LIMIT"
-    LIMIT_MAKER = "LIMIT_MAKER"
 
 
 class CandelstickInterval(enum.Enum):
     """CandelStick Intervals."""
 
     I_1MIN = "1m"
-    I_3MIN = "3m"
     I_5MIN = "5m"
     I_15MIN = "15m"
     I_30MIN = "30m"
@@ -46,17 +44,8 @@ class CandelstickInterval(enum.Enum):
     I_8H = "8h"
     I_12H = "12h"
     I_1D = "1d"
-    I_3D = "3d"
-    I_1W = "1w"
+    I_1W = "1W"
     I_1MONTH = "1M"
-
-
-class OrderResponseType(enum.Enum):
-    """Order Response Type."""
-
-    ACT = "ACK"
-    RESULT = "RESULT"
-    FULL = "FULL"
 
 
 class TimeInForce(enum.Enum):
