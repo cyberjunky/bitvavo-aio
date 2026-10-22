@@ -1,0 +1,71 @@
+[project]
+name = "bitvavo-aio"
+version = "1.1.0"
+description = "Bitvavo asynchronous Python client"
+authors = [
+    {name = "Ron Klinkien", email = "ron@cyberjunky.nl"},
+]
+dependencies = [
+    "aiohttp>=3.9,<4",
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["bitvavo", "crypto", "exchange", "api", "asyncio"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/cyberjunky/bitvavo-aio"
+"Issues" = "https://github.com/cyberjunky/bitvavo-aio/issues"
+"Changelog" = "https://github.com/cyberjunky/bitvavo-aio/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15",
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "ruff>=0.11",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.build]
+includes = ["bitvavo"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ASYNC", "B", "C4", "E", "F", "I", "N", "RUF", "UP", "W"]
+ignore = [
+    "E501",  # handled by the formatter
+    "N818",  # BitvavoException is public API
+    "N999",  # BitvavoClient.py etc. module names are public API
+]

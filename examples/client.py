@@ -2,7 +2,6 @@
 import asyncio
 import logging
 import os
-from datetime import datetime
 
 from bitvavo import enums
 from bitvavo.BitvavoClient import BitvavoClient
@@ -13,7 +12,7 @@ LOG = logging.getLogger("bitvavo")
 LOG.setLevel(logging.DEBUG)
 LOG.addHandler(logging.StreamHandler())
 
-print(f"Available loggers: {[name for name in logging.root.manager.loggerDict]}\n")
+print(f"Available loggers: {list(logging.root.manager.loggerDict)}\n")
 
 
 async def run():
@@ -23,7 +22,11 @@ async def run():
     api_key = os.environ["APIKEY"]
     sec_key = os.environ["SECKEY"]
 
-    client = BitvavoClient(api_key, sec_key)
+    async with BitvavoClient(api_key, sec_key) as client:
+        await _run(client)
+
+
+async def _run(client: BitvavoClient) -> None:
 
     # General
     print("\nServer time:")
@@ -54,8 +57,8 @@ async def run():
     print("\nTrades depth 5:")
     await client.get_trades(pair=Pair("ETH", "BTC"), limit=5)
 
-    print("\nCandelsticks:")
-    await client.get_candelsticks(pair=Pair("ETH", "BTC"), interval="1m", limit=5)
+    print("\nCandlesticks:")
+    await client.get_candlesticks(pair=Pair("ETH", "BTC"), interval="1m", limit=5)
 
     print("\nPrice ticker:")
     await client.get_price_ticker()
@@ -84,6 +87,7 @@ async def run():
             type=enums.OrderType.LIMIT,
             amount="1",
             price="1",
+            operator_id=1,
         )
     except BitvavoException as e:
         print(e)
@@ -96,7 +100,7 @@ async def run():
 
     print("\nGet order:")
     try:
-        await client.get_order(pair=Pair("ETH", "BTC"), order_id=1)
+        await client.get_order(pair=Pair("ETH", "BTC"), order_id="1")
     except BitvavoException as e:
         print(e)
 
@@ -117,8 +121,17 @@ async def run():
     print("\nAccount:")
     await client.get_account()
 
+    print("\nFees:")
+    await client.get_account_fees(quote="EUR")
+
     print("\nBalance:")
     await client.get_balance()
+
+    print("\nStaking balance:")
+    await client.get_staking_balance()
+
+    print("\nTransaction history:")
+    await client.get_account_history(max_items=10)
 
     print("\nDeposit EUR:")
     await client.get_deposit("EUR")
@@ -134,8 +147,6 @@ async def run():
 
     print("\nWithdrawal history BTC:")
     await client.get_withdrawal_history("BTC")
-
-    await client.close()
 
 
 if __name__ == "__main__":
